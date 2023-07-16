@@ -6,13 +6,13 @@ description: >-
 repository: https://github.com/mikeperri/flutter_sequencer
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
-  flutter: ">=1.10.0"
+   sdk: '>=3.0.6 <4.0.0'
+  # flutter: ">=1.10.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  ffi: ^1.0.0
+  ffi: ^2.0.2
   path: ^1.8.0
 
 dev_dependencies:
