@@ -4,6 +4,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
 enable_testing()
 
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
+endif()
+
 ## BEGIN GoogleTest setup ##
 SET(GOOGLETEST_DIR ${CMAKE_CURRENT_BINARY_DIR}/googletest)
 file(MAKE_DIRECTORY ${GOOGLETEST_DIR})
