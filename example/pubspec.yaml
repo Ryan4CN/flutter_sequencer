@@ -6,7 +6,8 @@ description: Demonstrates how to use the flutter_sequencer plugin.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-   sdk: '>=3.0.6 <4.0.0'
+  sdk: '>=3.0.6 <4.0.0'
+  flutter: '>=3.3.0'
 
 dependencies:
   flutter:
@@ -28,6 +29,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

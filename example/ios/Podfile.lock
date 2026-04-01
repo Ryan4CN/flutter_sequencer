@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_sequencer (0.0.2):
+  - flutter_sequencer (0.4.3):
     - Flutter
 
 DEPENDENCIES:
@@ -14,9 +14,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_sequencer/ios"
 
 SPEC CHECKSUMS:
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_sequencer: c10963b8b014760a0b26cc0a3efd9beaad95ec94
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  flutter_sequencer: 784ca9d5b733a52b2b31a6d2fd39f78bc5476591
 
-PODFILE CHECKSUM: dad5c248050686c335cc08c1ccd09e748efa0961
+PODFILE CHECKSUM: 12bd3b25efbc290f68e86ed19f7dcd8766118c2a
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.16.2

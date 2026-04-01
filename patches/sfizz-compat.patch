@@ -1,0 +1,65 @@
+diff --git a/external/atomic_queue/include/atomic_queue/atomic_queue.h b/external/atomic_queue/include/atomic_queue/atomic_queue.h
+index 21dc029b..8b6f2c53 100644
+--- a/external/atomic_queue/include/atomic_queue/atomic_queue.h
++++ b/external/atomic_queue/include/atomic_queue/atomic_queue.h
+@@ -391,13 +391,13 @@ class AtomicQueue2 : public AtomicQueueCommon<AtomicQueue2<T, SIZE, MINIMIZE_CON
+ 
+     T do_pop(unsigned tail) noexcept {
+         unsigned index = details::remap_index<SHUFFLE_BITS>(tail % size_);
+-        return Base::template do_pop_any(states_[index], elements_[index]);
++        return Base::do_pop_any(states_[index], elements_[index]);
+     }
+ 
+     template<class U>
+     void do_push(U&& element, unsigned head) noexcept {
+         unsigned index = details::remap_index<SHUFFLE_BITS>(head % size_);
+-        Base::template do_push_any(std::forward<U>(element), states_[index], elements_[index]);
++        Base::do_push_any(std::forward<U>(element), states_[index], elements_[index]);
+     }
+ 
+ public:
+@@ -519,13 +519,13 @@ class AtomicQueueB2 : public AtomicQueueCommon<AtomicQueueB2<T, A, MAXIMIZE_THRO
+ 
+     T do_pop(unsigned tail) noexcept {
+         unsigned index = details::remap_index<SHUFFLE_BITS>(tail & (size_ - 1));
+-        return Base::template do_pop_any(states_[index], elements_[index]);
++        return Base::do_pop_any(states_[index], elements_[index]);
+     }
+ 
+     template<class U>
+     void do_push(U&& element, unsigned head) noexcept {
+         unsigned index = details::remap_index<SHUFFLE_BITS>(head & (size_ - 1));
+-        Base::template do_push_any(std::forward<U>(element), states_[index], elements_[index]);
++        Base::do_push_any(std::forward<U>(element), states_[index], elements_[index]);
+     }
+ 
+ public:
+diff --git a/external/st_audiofile/thirdparty/wavpack/src/open_filename.c b/external/st_audiofile/thirdparty/wavpack/src/open_filename.c
+index 9a0e1d7a..5db34ec7 100644
+--- a/external/st_audiofile/thirdparty/wavpack/src/open_filename.c
++++ b/external/st_audiofile/thirdparty/wavpack/src/open_filename.c
+@@ -24,6 +24,15 @@
+ // to the previous behavior of simply calling fopen() and hoping that the
+ // local character set works. This is ignored on non-Windows platforms
+ // (which is okay because they are probably UTF-8 anyway).
++
++#if defined(__ANDROID__)
++#ifndef _LARGEFILE_SOURCE
++#define _LARGEFILE_SOURCE 1
++#endif
++#ifndef _POSIX_C_SOURCE
++#define _POSIX_C_SOURCE 200809L
++#endif
++#endif
+ 
+ #ifdef _WIN32
+ #define WIN32_LEAN_AND_MEAN
+@@ -63,7 +72,7 @@ static FILE *fopen_utf8 (const char *filename_utf8, const char *mode_utf8);
+ #endif
+ #endif
+ 
+-#ifdef HAVE_FSEEKO
++#if defined(HAVE_FSEEKO) && !defined(__ANDROID__)
+ #define fseek fseeko
+ #define ftell ftello
+ #endif

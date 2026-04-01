@@ -4,14 +4,14 @@ group 'com.michaeljperri.flutter_sequencer'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.5.21'
+    ext.kotlin_version = '2.2.20'
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.0'
+        classpath 'com.android.tools.build:gradle:8.11.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.eclipse.jgit:org.eclipse.jgit:5.12.0+"
     }
@@ -20,6 +20,7 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
+        mavenCentral()
     }
 }
 
@@ -27,13 +28,25 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 29
+    namespace 'com.michaeljperri.flutter_sequencer'
+    compileSdk 36
+    ndkVersion "28.2.13676358"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+
     defaultConfig {
-        minSdkVersion 16
+        minSdk 21
 
         externalNativeBuild {
             cmake {
@@ -41,10 +54,11 @@ android {
             }
         }
     }
-    lintOptions {
+
+    lint {
         disable 'InvalidPackage'
     }
-    ndkVersion "22.1.7171670"
+
     externalNativeBuild {
         cmake {
             version "3.18.1"
@@ -73,14 +87,45 @@ void cloneThirdPartyRepo(String name, String uri, String commit) {
     }
 }
 
+void applyThirdPartyPatch(String repoPath, String patchPath) {
+    def repoDir = new File("$projectDir/third_party/$repoPath")
+    def patchFile = new File(projectDir.parentFile, patchPath)
+
+    if (!repoDir.exists() || !patchFile.exists()) {
+        return
+    }
+
+    def reverseCheck = exec {
+        workingDir repoDir
+        commandLine 'git', 'apply', '--reverse', '--check', patchFile.absolutePath
+        ignoreExitValue true
+    }
+
+    if (reverseCheck.exitValue == 0) {
+        return
+    }
+
+    def forwardCheck = exec {
+        workingDir repoDir
+        commandLine 'git', 'apply', '--check', patchFile.absolutePath
+        ignoreExitValue true
+    }
+
+    if (forwardCheck.exitValue != 0) {
+        throw new GradleException("Failed to validate patch ${patchFile.absolutePath} for ${repoDir.absolutePath}")
+    }
+
+    exec {
+        workingDir repoDir
+        commandLine 'git', 'apply', patchFile.absolutePath
+    }
+}
+
 task cloneThirdPartyRepos {
     cloneThirdPartyRepo('oboe', 'https://github.com/google/oboe', '06ec23e4f6bc00ba7eea9b84e299f9200a598838')
     cloneThirdPartyRepo('TinySoundFont', 'https://github.com/schellingb/TinySoundFont.git', 'bf574519e601202c3a9d27a74f345921277eed39')
     cloneThirdPartyRepo('sfizz', 'https://github.com/sfztools/sfizz.git', '4174e8e00f998f4678547814c0108d74c210e9ad')
+    applyThirdPartyPatch('sfizz', 'patches/sfizz-compat.patch')
 }
 
 preBuild.dependsOn cloneThirdPartyRepos
-
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-}

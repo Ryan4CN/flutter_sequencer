@@ -39,16 +39,16 @@ final nAddTrackSfzString = nativeLib.lookupFunction<
         int)>('add_track_sfz_string');
 
 final nRemoveTrack = nativeLib
-    .lookupFunction<Void Function(Int32), void Function(int?)>('remove_track');
+    .lookupFunction<Void Function(Int32), void Function(int)>('remove_track');
 
 final nResetTrack = nativeLib
-    .lookupFunction<Void Function(Int32), void Function(int?)>('reset_track');
+    .lookupFunction<Void Function(Int32), void Function(int)>('reset_track');
 
 final nGetPosition =
     nativeLib.lookupFunction<Uint32 Function(), int Function()>('get_position');
 
 final nGetTrackVolume =
-    nativeLib.lookupFunction<Float Function(Int32), double Function(int?)>(
+    nativeLib.lookupFunction<Float Function(Int32), double Function(int)>(
         'get_track_volume');
 
 final nGetLastRenderTimeUs =
@@ -56,19 +56,19 @@ final nGetLastRenderTimeUs =
         'get_last_render_time_us');
 
 final nGetBufferAvailableCount =
-    nativeLib.lookupFunction<Uint32 Function(Int32), int Function(int?)>(
+    nativeLib.lookupFunction<Uint32 Function(Int32), int Function(int)>(
         'get_buffer_available_count');
 
 final nHandleEventsNow = nativeLib.lookupFunction<
-    Uint32 Function(Int32?, Pointer<Uint8>?, Uint32),
-    int Function(int?, Pointer<Uint8>?, int)>('handle_events_now');
+    Uint32 Function(Int32, Pointer<Uint8>, Uint32),
+    int Function(int, Pointer<Uint8>, int)>('handle_events_now');
 
 final nScheduleEvents = nativeLib.lookupFunction<
-    Uint32 Function(Int32?, Pointer<Uint8>?, Uint32),
-    int Function(int?, Pointer<Uint8>?, int)>('schedule_events');
+    Uint32 Function(Int32, Pointer<Uint8>, Uint32),
+    int Function(int, Pointer<Uint8>, int)>('schedule_events');
 
 final nClearEvents = nativeLib.lookupFunction<Void Function(Int32, Uint32),
-    void Function(int?, int?)>('clear_events');
+    void Function(int, int)>('clear_events');
 
 final nPlay =
     nativeLib.lookupFunction<Void Function(), void Function()>('engine_play');
@@ -180,12 +180,12 @@ class NativeBridge {
       int sampleRate, double tempo) {
     if (events.isEmpty) return 0;
 
-    final Pointer<Uint8>? nativeArray =
+    final nativeArray =
         calloc<Uint8>(events.length * SCHEDULER_EVENT_SIZE);
     events.asMap().forEach((eventIndex, e) {
       final byteData = e.serializeBytes(sampleRate, tempo, 0);
       for (var byteIndex = 0; byteIndex < byteData.lengthInBytes; byteIndex++) {
-        nativeArray![eventIndex * SCHEDULER_EVENT_SIZE + byteIndex] =
+        nativeArray[eventIndex * SCHEDULER_EVENT_SIZE + byteIndex] =
             byteData.getUint8(byteIndex);
       }
     });
@@ -197,12 +197,12 @@ class NativeBridge {
       int sampleRate, double tempo, int frameOffset) {
     if (events.isEmpty) return 0;
 
-    final Pointer<Uint8>? nativeArray =
+    final nativeArray =
         calloc<Uint8>(events.length * SCHEDULER_EVENT_SIZE);
     events.asMap().forEach((eventIndex, e) {
       final byteData = e.serializeBytes(sampleRate, tempo, frameOffset);
       for (var byteIndex = 0; byteIndex < byteData.lengthInBytes; byteIndex++) {
-        nativeArray![eventIndex * SCHEDULER_EVENT_SIZE + byteIndex] =
+        nativeArray[eventIndex * SCHEDULER_EVENT_SIZE + byteIndex] =
             byteData.getUint8(byteIndex);
       }
     });

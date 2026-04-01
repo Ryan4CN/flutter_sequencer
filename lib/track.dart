@@ -37,9 +37,10 @@ class Track {
         final normalizedSfzDir =
             await NativeBridge.normalizeAssetDir(sfzFile.parent.path);
 
-        if (normalizedSfzDir == null)
+        if (normalizedSfzDir == null) {
           throw Exception(
               'Could not normalize asset dir for ${sfzFile.parent.path}');
+        }
         normalizedSfzPath = '$normalizedSfzDir/${p.basename(sfzFile.path)}';
       } else {
         normalizedSfzPath = sfzFile.path;
@@ -55,9 +56,10 @@ class Track {
         normalizedSampleRoot =
             await NativeBridge.normalizeAssetDir(instrument.sampleRoot);
 
-        if (normalizedSampleRoot == null)
+        if (normalizedSampleRoot == null) {
           throw Exception(
               'Could not normalize asset dir for ${instrument.sampleRoot}');
+        }
       } else {
         normalizedSampleRoot = instrument.sampleRoot;
       }
