@@ -65,7 +65,7 @@ fi
 
 cd sfizz
 
-apply_repo_patch "$PWD" "$script_dir/../patches/sfizz-compat.patch"
+apply_repo_patch "$PWD" "$script_dir/../patches/sfizz-ios-compat.patch"
 
 if [ -f build/CMakeCache.txt ]; then
     rm -rf build

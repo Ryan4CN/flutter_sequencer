@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_sequencer'
-  s.version          = '0.4.3'
+  s.version          = '0.4.4'
   s.summary          = 'A Flutter plugin for sequencing audio with SFZ and SF2 sound fonts.'
   s.description      = <<-DESC
 Use flutter_sequencer to build note sequences and play them back with SFZ or SF2 instruments.
@@ -24,13 +24,15 @@ Use flutter_sequencer to build note sequences and play them back with SFZ or SF2
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES',
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64,i386',
+    'ENABLE_TESTABILITY' => 'YES',
     'STRIP_STYLE' => 'non-global',
     'HEADER_SEARCH_PATHS' => '$(PODS_TARGET_SRCROOT)/third_party/sfizz/src',
     'USER_HEADER_SEARCH_PATHS' => '"${PROJECT_DIR}/.."/Classes/CallbackManager/* "${PROJECT_DIR}/.."/Classes/Scheduler/* "${PROJECT_DIR}/.."/Classes/AudioUnit/Sfizz/SfizzDSPKernelAdapter.h',
     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++2a',
     'CLANG_CXX_LIBRARY' => 'libc++'
   }
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.swift_version = '5.0'
   s.library = 'c++'
   s.prepare_command = './prepare.sh'
